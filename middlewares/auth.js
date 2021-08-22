@@ -16,7 +16,7 @@ module.exports = (req, res, next) => {
   try {
     payload = jwt.verify(token, JWT);
   } catch (err) {
-    throw new InvalidTokenError('Некорректный токен');
+    throw new InvalidTokenError(`Некорректный токен ${token} ${JWT}`);
   }
 
   req.user = payload;

@@ -4,6 +4,8 @@ const User = require('../models/user');
 const { SUCCESS_CODE_200, SUCCESS_CODE_201 } = require('../utils/constants');
 const { IdentificationError, NotUniqueDataError } = require('../utils/errors');
 
+const { JWT } = process.env;
+
 module.exports.getUserMe = (req, res, next) => {
   User.findById(req.user._id)
     .then((user) => {
@@ -20,7 +22,7 @@ module.exports.login = (req, res, next) => {
 
   return User.findUserByCredentials(email, password)
     .then((user) => {
-      const token = jwt.sign({ _id: user._id }, 'some-secret-key', { expiresIn: '7d' });
+      const token = jwt.sign({ _id: user._id }, JWT, { expiresIn: '7d' });
       res.cookie('jwt', token, {
         maxAge: 3600000 * 24 * 7,
         httpOnly: true,
