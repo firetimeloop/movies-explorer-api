@@ -7,9 +7,8 @@ const { requestLogger, errorLogger } = require('./middlewares/logger');
 const auth = require('./middlewares/auth');
 const { createUser, login, signout } = require('./controllers/users');
 const { NotFoundError } = require('./utils/errors');
-const { ERROR_CODE_500 } = require('./utils/constants');
 
-const { PORT = 3000 } = process.env;
+const { PORT = 3000, MDB } = process.env;
 
 const app = express();
 
@@ -18,7 +17,7 @@ app.use(cookieParser());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-mongoose.connect('mongodb://localhost:27017/bitfilmsdb', {
+mongoose.connect(`mongodb://localhost:27017/${MDB}`, {
   useNewUrlParser: true,
   useCreateIndex: true,
   useFindAndModify: false,
@@ -41,15 +40,13 @@ app.post('/signup', celebrate({
   }),
 }), createUser);
 
-const usersRouter = require('./routes/users');
-const moviesRouter = require('./routes/movies');
-
 app.use(auth);
 
 app.post('/signout', signout);
 
-app.use('/', usersRouter);
-app.use('/', moviesRouter);
+const Router = require('./routes/index');
+
+app.use('/', Router);
 app.use(() => {
   throw new NotFoundError('Такого ресурса нет');
 });
@@ -58,13 +55,8 @@ app.use(errorLogger);
 
 app.use(errors());
 
-// eslint-disable-next-line no-unused-vars
-app.use((err, req, res, next) => {
-  const { statusCode = ERROR_CODE_500, message } = err;
-  return res.status(statusCode)
-    .send({
-      message: message || 'На сервере произошла ошибка',
-    });
-});
+const errorHandler = require('./middlewares/errorHandler');
+
+app.use(errorHandler);
 
 app.listen(PORT);

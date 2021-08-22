@@ -1,3 +1,4 @@
+const { JWT } = process.env;
 const jwt = require('jsonwebtoken');
 const { NotAuthorizedError, InvalidTokenError } = require('../utils/errors');
 
@@ -13,7 +14,7 @@ module.exports = (req, res, next) => {
   let payload;
 
   try {
-    payload = jwt.verify(token, 'some-secret-key');
+    payload = jwt.verify(token, JWT);
   } catch (err) {
     throw new InvalidTokenError('Некорректный токен');
   }
