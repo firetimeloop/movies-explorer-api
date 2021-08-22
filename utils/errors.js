@@ -1,10 +1,10 @@
 /* eslint-disable max-classes-per-file */
-import {
+const {
   ERROR_CODE_401,
   ERROR_CODE_403,
   ERROR_CODE_404,
   ERROR_CODE_409,
-} from './constants';
+} = require('./constants');
 
 class InvalidLoginDataError extends Error {
   constructor(message) {
