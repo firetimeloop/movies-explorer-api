@@ -2,7 +2,6 @@ const { JWT } = process.env;
 const jwt = require('jsonwebtoken');
 const { NotAuthorizedError, InvalidTokenError } = require('../utils/errors');
 
-// eslint-disable-next-line consistent-return
 module.exports = (req, res, next) => {
   const { authorization } = req.headers;
 

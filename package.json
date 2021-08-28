@@ -7,7 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "npx eslint .",
     "start": "node app.js",
-    "dev": "nodemon app.js"
+    "dev": "SET JWT=simple&&SET MDB=mongodb://localhost:27017/moviesdb&&nodemon app.js"
   },
   "repository": {
     "type": "git",

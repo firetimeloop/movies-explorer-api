@@ -89,6 +89,8 @@ module.exports.updateUserMe = (req, res, next) => {
       let error = err;
       if (err.name === 'ValidationError') {
         error = new IdentificationError('Переданы некорректные данные при редактировании ресурса');
+      } else if (err.name === 'MongoError' && err.codeName === 'DuplicateKey') {
+        error = new NotUniqueDataError('Такой email уже есть в базе');
       }
       next(error);
     });
